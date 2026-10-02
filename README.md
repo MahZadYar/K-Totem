@@ -1,4 +1,5 @@
 # K-Totem: Beauty Under Pressure
+
 ### Computational Solid Mechanics & Data-Driven Visualization Pipeline
 
 [![COMSOL Multiphysics](https://img.shields.io/badge/COMSOL-Multiphysics_6.x-blue.svg)](https://www.comsol.com/)
@@ -10,15 +11,17 @@
 
 ## Overview
 
-**K-Totem: *Beauty Under Pressure*** is a data-driven computational engineering and public art installation located at the **Faculty of Mechanical Engineering and Design (MIDF)**, Kaunas University of Technology (KTU), Lithuania. 
+![K-Totem Installation Render](K-totem.jpg)
+
+**K-Totem: *Beauty Under Pressure*** is a data-driven computational engineering and public art installation located at the **Faculty of Mechanical Engineering and Design (MIDF)**, Kaunas University of Technology (KTU), Lithuania.
 
 Originally erected as a 3.5-metre-tall monument celebrating international collaboration between the UNESCO Cities of Design (Kaunas and Kortrijk, Belgium), the sculpture’s exterior surface has been re-engineered into an explicit, quantitative visualization of its internal structural mechanics.
 
-Using **Finite Element Analysis (FEA)** in **COMSOL Multiphysics**, the continuous geometry is discretized into over 500,000 volumetric solid elements under gravitational self-weight loading. The resulting **internal hydrostatic pressure field** (mean normal stress) is extracted across 14 discrete planar boundary facets and mapped using a custom symmetrical logarithmic (**symlog**) scale. 
+Using **Finite Element Analysis (FEA)** in **COMSOL Multiphysics**, the continuous geometry is discretized into over 500,000 volumetric solid elements under gravitational self-weight loading. The resulting **internal hydrostatic pressure field** (mean normal stress) is extracted across 14 discrete planar boundary facets and mapped using a custom symmetrical logarithmic (**symlog**) scale.
 
 This repository provides the complete open-science pipeline required to reproduce the numerical simulation, export raw surface datasets and 3D glTF/GLB geometry, and synthesize publication-ready vector graphics (`.svg`) via MATLAB.
 
-![K-Totem Installation Render](K-totem.jpg)
+![K-Totem Installation 3D Model](K-totem.glb)
 
 ---
 
@@ -71,6 +74,7 @@ All simulation projects, scripts, 3D models, images, and generated vector files 
 ## Mechanics & Mathematical Formulation
 
 ### 1. Solid Mechanics Governing Equations
+
 The static structural equilibrium of the sculpture is governed by the Cauchy momentum equation in the absence of dynamic effects:
 
 $$\nabla \cdot \boldsymbol{\sigma} + \mathbf{f}_{\mathrm{g}} = \mathbf{0}$$
@@ -82,6 +86,7 @@ $$\boldsymbol{\sigma} = \mathbf{C} : \boldsymbol{\varepsilon} = \lambda \mathrm{
 $$\boldsymbol{\varepsilon} = \frac{1}{2}\left[\nabla \mathbf{u} + (\nabla \mathbf{u})^{\mathrm{T}}\right]$$
 
 ### 2. Hydrostatic Pressure Field
+
 Rather than displaying equivalent von Mises stress (which is non-negative and conceals the sign of volumetric deformation), the surface design maps the **hydrostatic pressure** $p$, defined as the negative mean normal stress:
 
 $$p = -\frac{1}{3}\mathrm{tr}(\boldsymbol{\sigma}) = -\frac{1}{3}(\sigma_{xx} + \sigma_{yy} + \sigma_{zz})$$
@@ -91,15 +96,17 @@ $$p = -\frac{1}{3}\mathrm{tr}(\boldsymbol{\sigma}) = -\frac{1}{3}(\sigma_{xx} + 
 * **$p \approx 0$ (Neutral Transition):** Transition trajectories where mean normal stress crosses zero.
 
 ### 3. Symmetrical Logarithmic (SymLog) Transformation
+
 Because local stress concentrations around sharp re-entrant corners produce values orders of magnitude larger than the broad baseline distribution, linear colormaps saturate. To maintain full dynamic resolution across both compression and tension without losing zero-crossing fidelity, a symmetrical logarithmic transformation is applied:
 
 $$\tilde{p} = \mathrm{sign}(p) \cdot \ln\left(1 + \frac{|p|}{s_0}\right)$$
 
-where $s_0 = 1.0 \times 10^5\,\mathrm{Pa}$ (100 kPa) represents the linear-to-logarithmic transition threshold. 
+where $s_0 = 1.0 \times 10^5\,\mathrm{Pa}$ (100 kPa) represents the linear-to-logarithmic transition threshold.
 
 Values are scaled symmetrically to $[-2.0, +2.0]$ and discretized into **50 distinct color intervals**.
 
 ### 4. Color Palette & Semiotics
+
 The colormap is smoothly interpolated in HSV color space across 11 keyframe anchors:
 
 | Hydrostatic State | Normalized Value | Dominant Color | Aesthetic / Mechanical Meaning |
@@ -113,6 +120,7 @@ The colormap is smoothly interpolated in HSV color space across 11 keyframe anch
 ## Data Reproduction Guide
 
 ### Part 1: Solving the Model in COMSOL Multiphysics
+
 1. Open `K-Totem.mph` (in the repository root) in **COMSOL Multiphysics 6.x** (or newer).
 2. Inspect the **Solid Mechanics (`solid`)** physics interface:
    * **Domain:** Homogeneous 3D volumetric domain representing the full 3.5 m sculpture.
@@ -124,7 +132,9 @@ The colormap is smoothly interpolated in HSV color space across 11 keyframe anch
 ---
 
 ### Part 2: Exporting the 3D Interactive Model (`.glb`)
+
 To generate the 3D surface model with baked hydrostatic pressure values:
+
 1. In the COMSOL Model Builder tree, expand **Results** $\to$ **Export**.
 2. Locate the pre-configured export node named **`3D surface`**.
 3. In the **Settings** window for `3D surface`:
@@ -134,11 +144,10 @@ To generate the 3D surface model with baked hydrostatic pressure values:
 4. Set the output file path to `K-totem.glb` in the repository root.
 5. Click **Export** at the top of the Settings window.
 
-> **Tip:** The exported `.glb` file can be previewed directly on GitHub with its native 3D WebGL viewer, in Windows 3D Viewer, or in any web browser.
-
 ---
 
 ### Part 3: Exporting the 2D Facet Text Datasets (`S01` to `S14`)
+
 The outer faceted shell of the K-Totem consists of 14 key boundary panels. Each panel is exported as a standalone 2D unstructured triangular mesh dataset with nodal scalar values.
 
 1. In the COMSOL Model Builder tree, navigate to **Results** $\to$ **Export**.
@@ -150,8 +159,10 @@ The outer faceted shell of the K-Totem consists of 14 key boundary panels. Each 
 4. Set the target file paths to `data/S1.txt` ... `data/S14.txt`.
 5. Select each node and click **Export** (or right-click **Export** and choose **Export All**).
 
-#### Structure of the Exported `.txt` Files:
+#### Structure of the Exported `.txt` Files
+
 Each text file conforms to the standard COMSOL export specification:
+
 ```text
 % Model:              K-Totem.mph
 % Version:            COMSOL 6.4.0.293
@@ -179,10 +190,12 @@ Each text file conforms to the standard COMSOL export specification:
 The MATLAB script `visualize.m` reads the raw COMSOL text files from `data/`, executes the planar coordinate rotations, applies the symlog scaling, performs natural neighbor interpolation onto a regular grid with outer bleed margins, and renders publication-ready vector SVGs overlaid with the computational mesh wireframe.
 
 #### 1. Requirements
+
 * **MATLAB R2020b or later** (base MATLAB; requires no specialized toolboxes).
 * Standard graphics export engine (`-dsvg`).
 
 #### 2. Configuration Parameters
+
 Key settings in `visualize.m`:
 
 ```matlab
@@ -208,6 +221,7 @@ margin_cm       = 1.0;     % 1 cm bleed margin for fabrication wrap-around
 ```
 
 #### 3. Execution
+
 In MATLAB, ensure the current folder is the repository root and run:
 
 ```matlab
@@ -215,6 +229,7 @@ visualize
 ```
 
 #### 4. Visualization Algorithm Details
+
 1. **Coordinate Transformation:** Rotates planar coordinates by the panel-specific fabrication angle $\theta$.
 2. **Dynamic Scaling:** Computes $\tilde{p}_i = \mathrm{sign}(p_i) \cdot \ln(1 + |p_i| / 10^5)$.
 3. **Bleed Domain Interpolation:** Computes the bounding box expanded by a 1 cm margin. Natural neighbor interpolation (`scatteredInterpolant(..., 'natural', 'nearest')`) evaluates interior points smoothly while nearest-neighbor extrapolates into the bleed margin to avoid NaN boundaries.
@@ -224,6 +239,7 @@ visualize
 5. **Colorbar Synthesis:** If `export_colorbar = true`, constructs a standalone normalized colorbar figure (`colorbar.svg`) with exact numerical tick intervals.
 
 #### 5. Generated Outputs
+
 * **`S1.svg` to `S14.svg`:** Vector graphic files representing each panel, dimensioned to true physical proportions.
 * **`colorbar.svg`:** High-precision vector legend showing the 50 discrete contour steps normalized from $-1.0$ to $+1.0$.
 
