@@ -11,8 +11,6 @@
 
 ## Overview
 
-![K-Totem Installation Render](K-totem.jpg)
-
 **K-Totem: *Beauty Under Pressure*** is a data-driven computational engineering and public art installation located at the **Faculty of Mechanical Engineering and Design (MIDF)**, Kaunas University of Technology (KTU), Lithuania.
 
 Originally erected as a 3.5-metre-tall monument celebrating international collaboration between the UNESCO Cities of Design (Kaunas and Kortrijk, Belgium), the sculpture’s exterior surface has been re-engineered into an explicit, quantitative visualization of its internal structural mechanics.
@@ -21,7 +19,7 @@ Using **Finite Element Analysis (FEA)** in **COMSOL Multiphysics**, the continuo
 
 This repository provides the complete open-science pipeline required to reproduce the numerical simulation, export raw surface datasets and 3D glTF/GLB geometry, and synthesize publication-ready vector graphics (`.svg`) via MATLAB.
 
-![K-Totem Installation 3D Model](K-totem.glb)
+![K-Totem Installation Render](K-totem.jpg)
 
 ---
 
@@ -64,8 +62,6 @@ All simulation projects, scripts, 3D models, images, and generated vector files 
 ├── K-totem.glb                  # Exported 3D surface model (glTF/GLB) with mapped pressure
 ├── visualize.m                  # MATLAB pipeline: processes data/*.txt into scaled SVGs
 ├── K-totem.jpg                  # Rendered image / photo of the installation
-├── colorbar.svg                 # Standalone 50-band calibrated vector colorbar
-├── S1.svg ... S14.svg           # Generated 2D vector facets with mesh & contour lines
 └── README.md                    # Project documentation & reproduction guide
 ```
 
@@ -271,7 +267,7 @@ If you use the 3D model, simulation files, or visualization code in your academi
   title        = {K-Totem: Beauty Under Pressure -- Computational Solid Mechanics and Data Visualization},
   institution  = {Institute of Materials Science, Kaunas University of Technology (KTU)},
   year         = {2026},
-  howpublished = {\url{https://github.com/your-username/k-totem}}
+  howpublished = {\url{https://github.com/MahZadYar/K-Totem}}
 }
 ```
 
