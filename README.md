@@ -18,8 +18,7 @@ Using **Finite Element Analysis (FEA)** in **COMSOL Multiphysics**, the continuo
 
 This repository provides the complete open-science pipeline required to reproduce the numerical simulation, export raw surface datasets and 3D glTF/GLB geometry, and synthesize publication-ready vector graphics (`.svg`) via MATLAB.
 
-![K-Totem Installation Render](assets/installation_render.jpg)
-*(Replace `assets/installation_render.jpg` with your rendered installation image)*
+![K-Totem Installation Render](K-totem.jpg)
 
 ---
 
